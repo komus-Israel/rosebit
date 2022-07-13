@@ -19,8 +19,6 @@ def create_app(config_name):
 
     db.init_app(app)        #   db initialization with the app
 
-   
-
     '''
         @dev    register blueprints
         

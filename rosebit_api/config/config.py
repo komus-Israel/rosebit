@@ -19,8 +19,8 @@ class Config:
 class DevelopmentConfig(Config):
 
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_DEV_URI")
-
+    SQLALCHEMY_DATABASE_URI =  "postgresql://posgres:123@localhost:5453/rosebit" #os.environ.get("SQLALCHEMY_DATABASE_DEV_URI")
+    
 class ProductionConfig(Config):
 
     DEBUG = True
