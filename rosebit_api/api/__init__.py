@@ -17,6 +17,7 @@ def create_app(config_name):
         
     '''
 
+    #   register auth blueprint
     app.register_blueprint(auth_router, url_prefix = "/v1/auth")
 
     

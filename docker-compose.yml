@@ -1,0 +1,30 @@
+volumes:
+  data:
+
+services:
+  dev-db:
+    image: postgres:13
+    ports:
+      - 5453:5432
+    environment:
+      POSTGRES_USER: posgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: rosebit
+
+  test-db:
+    image: postgres:13
+    ports:
+      - 5454:5432
+    environment:
+      POSTGRES_USER: posgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: rosebit
+
+  redis:
+    image: redis:latest
+    volumes:
+      - data:/data
+    ports:
+      - 6379:6379
+  
+  
