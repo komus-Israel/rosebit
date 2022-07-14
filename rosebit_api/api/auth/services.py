@@ -1,11 +1,13 @@
 from datetime import datetime
+from os import access
 from rosebit_api.speedpay_core.core_sql import QuerySpeedPayDB
-from flask import jsonify
+from flask import jsonify, g 
 from rosebit_api.models.model import User
-from rosebit_api.extensions import db
+from rosebit_api.extensions import db, jwt
 from rosebit_api.otp.crud import generate_otp, get_otp_by_phone_number, update_otp
 from rosebit_api.sms.base import send_sms
 from rosebit_api.email.base import send_email
+from flask_jwt_extended import create_access_token
 
 speedPayDB = QuerySpeedPayDB()
 
@@ -162,11 +164,19 @@ class OnboardingService():
         get_user.email_verified = True
         db.session.commit()
 
+        g.user = get_user
+        access_token = create_access_token(identity=g.user.email)
+
         return jsonify (
 
             status = "success",
             msg = "email verified",
-            id = user_id
+            id = user_id,
+            access_token = access_token,
+            data =  dict(
+                email_verified = get_user.email_verified,
+                phone_verified = get_user.phone_number_verified
+            )
         )
 
 

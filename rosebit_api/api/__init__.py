@@ -1,7 +1,7 @@
 from flask import Flask
 from rosebit_api.api.auth import  auth_router
 from rosebit_api.config import config
-from rosebit_api.extensions import db
+from rosebit_api.extensions import db, jwt
 
 
 
@@ -18,6 +18,7 @@ def create_app(config_name):
     """ intialization of dependencies """
 
     db.init_app(app)        #   db initialization with the app
+    jwt.init_app(app)       #   jwt initialization with the app
 
     '''
         @dev    register blueprints
