@@ -31,7 +31,7 @@ class User(db.Model):
 class UserOTP(db.Model):
 
     __tablename__ = "user_otp"
-    id = db.Column(db.String(50), primary_key=True, default=uuid.uuid4)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     otp = db.Column(db.String(6))
     time_sent = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     time_expired = db.Column(db.DateTime)

@@ -27,12 +27,44 @@ def generate_otp(phone_number):
         )
 
         db.session.add(user_otp)
-        db.session.commit(user_otp)
-        otp = user_otp.otp
-        return otp
+        db.session.commit()
+        return OTP
+        
     except Exception as e:
+        print(e)
         db.session.rollback()
         logger.error('generate_otp@Error')
         logger.error(e)
         return None
+
+def get_otp_by_phone_number(phone_number):
+    """Retrieve UserOTP by phone number."""
+    try:
+        return UserOTP.query.filter_by(phone_number=phone_number).first()
+    except Exception as e:
+        logger.error('get_otp_by_phone_number@Error')
+        logger.error(e)
+        return None
+
+
+def update_otp(user_otp):
+    """Update UserOTP otp and time_expired fields."""
+    try:
+        # An instance of UserOTP must be passed as parameter not a phone_numer,
+        # inorder to update its otp and time_expired fields
+        # user_otp = get_otp_by_phone_number(phone_number)
+        OTP, EXPIRY_TIME = timed_random_gen()
+        user_otp.otp = OTP
+        print(OTP)
+        user_otp.time_expired = EXPIRY_TIME
+        db.session.commit() # the otp returned is not commited to db
+        otp = user_otp.otp
+        print(otp)
+        return otp
+    except Exception as e:
+        db.session.rollback()
+        logger.error('update_otp@Error')
+        logger.error(e)
+        return None
+
 

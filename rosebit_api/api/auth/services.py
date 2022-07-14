@@ -2,6 +2,7 @@ from rosebit_api.speedpay_core.core_sql import QuerySpeedPayDB
 from flask import jsonify
 from rosebit_api.models.model import User
 from rosebit_api.extensions import db
+from rosebit_api.otp.crud import generate_otp
 
 speedPayDB = QuerySpeedPayDB()
 
@@ -35,6 +36,9 @@ class OnboardingService():
             db.session.add(step_one_onboarding)
             db.session.commit()
             
+            otp = generate_otp(data["phone"])
+            print(otp)
+
             return jsonify(
 
                 status = "success",
