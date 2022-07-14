@@ -27,7 +27,7 @@ def process_sms(user_phone_no, body):
     """Send SMS to a user's phone number."""
     try:
         ROUTE_SMS_BASE_URL = os.environ.get('ROUTE_MOBILE_BASE_URL')
-        source = 'Rosebit'
+        source = 'SpeedPay'
         recipient_no = format_phone_no_to_234(user_phone_no)
         msg = body + " From RosebitNG"
         print(ROUTE_SMS_BASE_URL)

@@ -1,8 +1,9 @@
+from datetime import datetime
 from rosebit_api.speedpay_core.core_sql import QuerySpeedPayDB
 from flask import jsonify
 from rosebit_api.models.model import User
 from rosebit_api.extensions import db
-from rosebit_api.otp.crud import generate_otp
+from rosebit_api.otp.crud import generate_otp, get_otp_by_phone_number
 from rosebit_api.sms.base import send_sms
 
 speedPayDB = QuerySpeedPayDB()
@@ -24,7 +25,7 @@ class OnboardingService():
 
             ), 200
         
-        fetch_number_from_rosebit = User.query.filter_by(phone = data["phone"]).first()
+        fetch_number_from_rosebit = User.query.filter_by(phone_number = data["phone"]).first()
 
         if not fetch_number_from_rosebit:
 
@@ -43,16 +44,63 @@ class OnboardingService():
 
                 return jsonify(msg="otp sent"), 403
 
-            send_sms(data["phone"], str(otp))
+            send_sms(data["phone"], f"Your Rosebit verification code is {otp}")
 
             return jsonify(
 
                 status = "success",
-                msg = "check sms for verification",
+                msg = "check your sms for verification the verification code",
+                speedpayOnboarding = False,
                 id = step_one_onboarding.id
-            )
+            ), 201
 
         
+
+    def verify_phone_number(data):
+
+        submitted_otp = data["otp"]
+        phone_number = data["phone_number"]
+        user_id = data["id"]
+
+        generated_otp = get_otp_by_phone_number(phone_number)
+
+        if datetime.utcnow() > generated_otp.time_expired :
+
+            return jsonify(
+
+                status = "failed",
+                msg = "expired otp",
+            ), 403
+       
+
+        if not generated_otp.otp:
+    
+            return jsonify(
+
+                status = "failed",
+                msg = "invalid otpp",
+            ), 400
+
+        if generated_otp.otp != submitted_otp:
+            return jsonify(
+
+                status = "failed",
+                msg = "invalid otp",
+            ), 400
+
+        get_user = User.query.filter_by(id = user_id).first()
+
+        get_user.phone_number = phone_number
+        get_user.phone_number_verified = True
+        db.session.commit()
+
+        return jsonify (
+
+            status = "success",
+            msg = "number verified"
+        )
+
+
 
 
     def step_two_onboarding(self):

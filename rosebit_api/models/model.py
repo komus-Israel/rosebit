@@ -15,10 +15,13 @@ class User(db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     first_name = db.Column(db.String(200), index = True)
     last_name = db.Column(db.String(200), index = True)
-    phone = db.Column(db.String(200), index = True, unique=True)
+    phone_number = db.Column(db.String(200), index = True, unique=True)
+    phone_number_verified = db.Column(db.Boolean, default=False)
+    passcode = db.Column(db.String(4))
+    passcode_set = db.Column(db.Boolean, default=False)
 
     @validates("phone_number")
-    def validate_contact(self, phone_number):
+    def validate_contact(self, key, phone_number):
         if not phone_number.startswith("+") and (
             len(phone_number[1:]) != 13 or len(phone_number[1:]) != 12
         ):
@@ -46,4 +49,4 @@ class UserOTP(db.Model):
         return phone_number
 
     def __repr__(self):
-        return f"UserOTP('{self.user_id}','{self.otp}')"
+        return f"UserOTP('{self.id}','{self.otp}')"

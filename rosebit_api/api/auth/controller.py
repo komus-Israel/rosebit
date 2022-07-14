@@ -13,4 +13,8 @@ def step_one_onboarding():
 
     #   return the step one onboarding process service
     return OnboardingService.step_one_onboarding(request.json)
+
+@auth_router.post("/onboarding/verify/phone")
+def verify_phone():
+    return OnboardingService.verify_phone_number(request.json)
     
