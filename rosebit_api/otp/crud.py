@@ -49,17 +49,14 @@ def get_otp_by_phone_number(phone_number):
 def update_otp(user_otp):
     """Update UserOTP otp and time_expired fields."""
     try:
-        # An instance of UserOTP must be passed as parameter not a phone_numer,
+        # An instance of UserOTP must be passed as parameter not a phone_number,
         # inorder to update its otp and time_expired fields
         # user_otp = get_otp_by_phone_number(phone_number)
         OTP, EXPIRY_TIME = timed_random_gen()
         user_otp.otp = OTP
-        print(OTP)
         user_otp.time_expired = EXPIRY_TIME
         db.session.commit() # the otp returned is not commited to db
-        otp = user_otp.otp
-        print(otp)
-        return otp
+        return OTP
     except Exception as e:
         db.session.rollback()
         logger.error('update_otp@Error')

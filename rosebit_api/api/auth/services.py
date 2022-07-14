@@ -3,8 +3,9 @@ from rosebit_api.speedpay_core.core_sql import QuerySpeedPayDB
 from flask import jsonify
 from rosebit_api.models.model import User
 from rosebit_api.extensions import db
-from rosebit_api.otp.crud import generate_otp, get_otp_by_phone_number
+from rosebit_api.otp.crud import generate_otp, get_otp_by_phone_number, update_otp
 from rosebit_api.sms.base import send_sms
+from rosebit_api.email.base import send_email
 
 speedPayDB = QuerySpeedPayDB()
 
@@ -88,7 +89,7 @@ class OnboardingService():
                 msg = "invalid otp",
             ), 400
 
-        get_user = User.query.filter_by(id = user_id).first()
+        get_user = User.query.get_or_404(user_id)
 
         get_user.phone_number = phone_number
         get_user.phone_number_verified = True
@@ -101,10 +102,23 @@ class OnboardingService():
         )
 
 
+    def step_two_onboarding(data):
 
+        user_otp = get_otp_by_phone_number(data["phone_number"])
+        user = User.query.filter_by(phone_number = data["phone_number"]).first()
 
-    def step_two_onboarding(self):
-        pass 
+        if not user_otp:
+            return jsonify(
+                msg = "phone number not verified",
+                status = "failed"
+            ), 401
+        
+        updated_otp = update_otp(user_otp)
+        send_email(user, data["email"], "Email Verification", f"Your Rosebit email verification code is {updated_otp}")
+        return jsonify(
+            msg = "working"
+        )
+        #otp = generate_otp(data["phone"])
 
     def step_three_onboarding(self):
         pass
