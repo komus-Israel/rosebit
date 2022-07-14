@@ -14,15 +14,16 @@ class QuerySpeedPayDB():
         return session.bind
 
     """ check if number has been registered in speedpay """
-    
+
     def query_user_details_by_phone(self, phone:str):
 
         session = self.bind()
         data = session.execute(f"SELECT phone_number, phone_number_verified, email_verified, kyc_completed from users where phone_number='{phone}';")
-        serialized_data = [_data for _data in data]
-        phone_number, phone_number_verified, email_verified, kyc_completed = serialized_data[0]
-        
+        serialized_data = [_data for _data in data] 
+               
         if len(serialized_data) > 0:
+
+            phone_number, phone_number_verified, email_verified, kyc_completed = serialized_data[0]
 
             return True, dict(
                     phone_number = phone_number, phone_number_verified = phone_number_verified, 
