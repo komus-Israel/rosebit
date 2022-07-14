@@ -18,9 +18,15 @@ def step_one_onboarding():
 def verify_phone():
     return OnboardingService.verify_phone_number(request.json)
 
-@auth_router.post("/onboarding/step-two")
+@auth_router.post("/onboarding/email/send")
+def send_email_verification():
+    return OnboardingService.send_email_verification(request.json)
+
+@auth_router.post("onboarding/verify/email")
 def step_two_onboarding():
     return OnboardingService.step_two_onboarding(request.json)
+
+
 
 
     

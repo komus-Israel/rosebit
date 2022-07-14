@@ -15,6 +15,8 @@ class User(db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     first_name = db.Column(db.String(200), index = True)
     last_name = db.Column(db.String(200), index = True)
+    email = db.Column(db.String(200), index = True)
+    email_verified = db.Column(db.Boolean, default=False)
     phone_number = db.Column(db.String(200), index = True, unique=True)
     phone_number_verified = db.Column(db.Boolean, default=False)
     passcode = db.Column(db.String(4))

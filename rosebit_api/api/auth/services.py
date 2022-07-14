@@ -101,8 +101,8 @@ class OnboardingService():
             msg = "number verified"
         )
 
-
-    def step_two_onboarding(data):
+    #   send verification link to email
+    def send_email_verification(data):
 
         user_otp = get_otp_by_phone_number(data["phone_number"])
         user = User.query.filter_by(phone_number = data["phone_number"]).first()
@@ -116,12 +116,61 @@ class OnboardingService():
         updated_otp = update_otp(user_otp)
         send_email(user, data["email"], "Email Verification", f"Your Rosebit email verification code is {updated_otp}")
         return jsonify(
-            msg = "working"
-        )
-        #otp = generate_otp(data["phone"])
 
-    def step_three_onboarding(self):
-        pass
+            msg = "check email for verification code",
+            status = "success",
+
+
+        ), 201
+       
+
+    def step_two_onboarding(data):
+        
+        submitted_otp = data["otp"]
+        phone_number = data["phone_number"]
+        user_email = data["email"]
+        user_id = data["id"]
+
+        generated_otp = get_otp_by_phone_number(phone_number)
+
+        if datetime.utcnow() > generated_otp.time_expired :
+    
+            return jsonify(
+
+                status = "failed",
+                msg = "expired otp",
+            ), 403
+
+        if not generated_otp.otp:
+    
+            return jsonify(
+
+                status = "failed",
+                msg = "invalid otpp",
+            ), 400
+
+        if generated_otp.otp != submitted_otp:
+            return jsonify(
+
+                status = "failed",
+                msg = "invalid otp",
+            ), 400
+        
+        get_user = User.query.get_or_404(user_id)
+
+        get_user.email = user_email
+        get_user.email_verified = True
+        db.session.commit()
+
+        return jsonify (
+
+            status = "success",
+            msg = "email verified",
+            id = user_id
+        )
+
+
+
 
 
 class AuthService():
