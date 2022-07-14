@@ -31,7 +31,6 @@ def generate_otp(phone_number):
         return OTP
         
     except Exception as e:
-        print(e)
         db.session.rollback()
         logger.error('generate_otp@Error')
         logger.error(e)

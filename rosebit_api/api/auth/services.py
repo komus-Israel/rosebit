@@ -3,6 +3,7 @@ from flask import jsonify
 from rosebit_api.models.model import User
 from rosebit_api.extensions import db
 from rosebit_api.otp.crud import generate_otp
+from rosebit_api.sms.base import send_sms
 
 speedPayDB = QuerySpeedPayDB()
 
@@ -37,7 +38,12 @@ class OnboardingService():
             db.session.commit()
             
             otp = generate_otp(data["phone"])
-            print(otp)
+
+            if not otp:
+
+                return jsonify(msg="otp sent"), 403
+
+            send_sms(data["phone"], str(otp))
 
             return jsonify(
 

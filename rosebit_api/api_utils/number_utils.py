@@ -1,6 +1,6 @@
 """This module contains sub utilities used across the codebase."""
 
-from apis.api_utils.error_logs import logging_error
+from rosebit_api.api_utils.error_logger import logging_error
 
 
 def format_phone_no_to_plus234(phone_number):
