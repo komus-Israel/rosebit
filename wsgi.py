@@ -2,7 +2,7 @@ from rosebit_api.api import create_app
 from rosebit_api.extensions import db
 from rosebit_api.models.model import User, UserOTP
 
-app = create_app("development")
+app = create_app("staging")
 
 
 
