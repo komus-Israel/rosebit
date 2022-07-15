@@ -68,7 +68,7 @@ class OnboardingService():
         generated_otp = get_otp_by_phone_number(phone_number)
 
         if datetime.utcnow() > generated_otp.time_expired :
-
+    
             return jsonify(
 
                 status = "failed",

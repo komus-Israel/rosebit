@@ -44,6 +44,12 @@ class StagingConfig(Config):
     DEBUG = True
 
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SQLALCHEMY_BINDS = {
+
+                           # "speedpay": "postgresql://posgres:123@localhost:5453/speedway"
+                           "speedpay": os.environ.get("SPEEDPAY_TEST_DB")
+
+                        }
     
     if SQLALCHEMY_DATABASE_URI and SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
         SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
