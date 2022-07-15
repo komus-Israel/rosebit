@@ -43,7 +43,7 @@ class StagingConfig(Config):
 
     DEBUG = True
 
-    SQLALCHEMY_DATABASE_URI = "postgres://cmajacmlqoaurn:b9facb78f0b32f683dc3cc883e9a17b0bb48c7fcc8e3604ed5a5286baf28a832@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dctnjsd3q1ramk"#os.getenv('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = "postgresql://cmajacmlqoaurn:b9facb78f0b32f683dc3cc883e9a17b0bb48c7fcc8e3604ed5a5286baf28a832@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/dctnjsd3q1ramk"#os.getenv('DATABASE_URL')
     SQLALCHEMY_BINDS = {
 
                            # "speedpay": "postgresql://posgres:123@localhost:5453/speedway"
